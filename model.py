@@ -22,6 +22,7 @@ class PINN(nn.Module):
         self.output_layer = nn.Linear(layer_list[-2], layer_list[-1])
         
     def _make_layer(self, layer_list):
+        ###this layer makes layer
         layers = []
         for i in range(len(layer_list) - 1):
             block = LinearBlock(layer_list[i], layer_list[i + 1])
