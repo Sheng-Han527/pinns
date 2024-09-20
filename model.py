@@ -28,11 +28,25 @@ class PINN(nn.Module):
             layers.append(block)
         return nn.Sequential(*layers)
 
+    # def forward(self, x):
+    #     x = self.input_layer(x)
+    #     x = torch.tanh(x) 
+    #     x = self.hidden_layers(x)
+    #     x = self.output_layer(x)
+    #     return x
+    
     def forward(self, x):
+        t_0, x_0 = x[:,0:1], x[:,1:2]
         x = self.input_layer(x)
         x = torch.tanh(x) 
         x = self.hidden_layers(x)
         x = self.output_layer(x)
+        #print(x.shape)
+        #x = torch.absolute(x_0)+torch.tanh(t_0)*x
+        x = (1-torch.tanh(t_0)) * torch.absolute(x_0) + torch.tanh(t_0)*x 
+        #x = (1-torch.tanh(t_0)) * (x_0)**2 + torch.tanh(t_0)*x 
+        #x = torch.tanh(t_0)*x
+        #return -x+torch.absolute(x_0)
         return x
 
 def weights_init(m):

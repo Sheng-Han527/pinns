@@ -23,6 +23,20 @@ def ac_equation(u, tx):
     e = u_t -0.0001*u_xx + 5*u**3 - 5*u
     return e 
 
+def hj_equation(u, tx):
+    u_tx = fwd_gradients(u, tx)
+    u_t = u_tx[:, 0:1]
+    u_x = u_tx[:, 1:2]
+    e= u_t + 0.5* np.linalg.norm(u_x)**2
+    return e
+
+def bs_entropy_hj_equation(t_data, u, tx):
+    u_tx = fwd_gradients(u, tx)
+    u_t = u_tx[:, 0:1]
+    u_x = u_tx[:, 1:2]
+    e= u_t + 0
+    return e 
+
 def resplot(x, t, t_data, x_data, Exact, u_pred):
     plt.figure(figsize=(10, 10))
     plt.subplot(2, 2, 1)
