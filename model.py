@@ -44,7 +44,16 @@ class PINN(nn.Module):
         x = self.output_layer(x)
         #print(x.shape)
         #x = torch.absolute(x_0)+torch.tanh(t_0)*x
-        x = (1-torch.tanh(t_0)) * torch.absolute(x_0) + torch.tanh(t_0)*x 
+        
+        # # for the bg initial condition
+        # x = (1-torch.tanh(t_0)) *  -torch.sin(torch.pi*x_0) + torch.tanh(t_0)*x 
+        
+        # # for initial condition being L2 norm
+        # x = (1-torch.tanh(t_0)) * torch.pow(x_0,2) + torch.tanh(t_0)*x 
+        
+        # for initial condition being L1 norm
+        x = (1-torch.tanh(t_0)) * torch.absolute(x_0-1/2)**2 + torch.tanh(t_0)*x 
+        
         #x = (1-torch.tanh(t_0)) * (x_0)**2 + torch.tanh(t_0)*x 
         #x = torch.tanh(t_0)*x
         #return -x+torch.absolute(x_0)

@@ -27,14 +27,31 @@ def hj_equation(u, tx):
     u_tx = fwd_gradients(u, tx)
     u_t = u_tx[:, 0:1]
     u_x = u_tx[:, 1:2]
-    e= u_t + 0.5* np.linalg.norm(u_x)**2
+    # e= u_t + 0.5* np.linalg.norm(u_x)**2
+    e = u_t + 1/2*(u_x)**2
     return e
 
-def bs_entropy_hj_equation(t_data, u, tx):
+def bs_entropy_hj_equation(u, tx):
     u_tx = fwd_gradients(u, tx)
     u_t = u_tx[:, 0:1]
     u_x = u_tx[:, 1:2]
-    e= u_t + 0
+    t=tx[:,0:1]
+    x=tx[:,1:2]
+    # e= u_t + 1/t *((x/t-1/x*u_x*torch.log(1-t/x**2*u_x)+1/x*u_x))
+    u_xx = fwd_gradients(u_x, tx)[:, 1:2]
+    nu=1
+    e= u_t + ((x/t**2-1/(x*t)*u_x*torch.log(1-t/x**2*u_x)+1/(x*t)*u_x))+ nu*u_xx
+    # for i in range(len(e)):
+    #     val=e[i]
+    #     if torch.isnan(val):
+    #         # e[i]=0 
+    #         alter_loss=(1-t[i]/x[i]**2*u_x[i])**2
+            
+    #         if torch.isnan(alter_loss) or torch.isinf(alter_loss):
+    #             e[i]=0
+    #         else:
+    #             e[i]=alter_loss
+    #         # print('x-value'+str(x[i]),'t-value'+str(t[i]),'u_t-value'+str(u_t[i]),'u_x-value'+str(u_x[i]))
     return e 
 
 def resplot(x, t, t_data, x_data, Exact, u_pred):
