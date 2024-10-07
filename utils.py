@@ -37,10 +37,13 @@ def bs_entropy_hj_equation(u, tx):
     u_x = u_tx[:, 1:2]
     t=tx[:,0:1]
     x=tx[:,1:2]
-    # e= u_t + 1/t *((x/t-1/x*u_x*torch.log(1-t/x**2*u_x)+1/x*u_x))
-    u_xx = fwd_gradients(u_x, tx)[:, 1:2]
-    nu=1
-    e= u_t + ((x/t**2-1/(x*t)*u_x*torch.log(1-t/x**2*u_x)+1/(x*t)*u_x))+ nu*u_xx
+    e= u_t + 1/t**2 *((x-t*x*u_x)*torch.log(1-t*u_x)+t*x*u_x)
+    
+    # u_xx = fwd_gradients(u_x, tx)[:, 1:2]
+    # nu=1/10000
+    # e=e+nu*u_xx
+    
+    
     # for i in range(len(e)):
     #     val=e[i]
     #     if torch.isnan(val):
@@ -59,6 +62,8 @@ def resplot(x, t, t_data, x_data, Exact, u_pred):
     plt.subplot(2, 2, 1)
     plt.plot(x, Exact[:,0],'-')
     plt.plot(x, u_pred[:,0],'--')
+    # plt.xlim(0,1)
+    # plt.ylim(0,1)
     plt.legend(['Reference', 'Prediction'])
     plt.title("Initial condition ($t=0$)")
     
@@ -66,6 +71,8 @@ def resplot(x, t, t_data, x_data, Exact, u_pred):
     t_step = int(0.25*len(t))
     plt.plot(x, Exact[:,t_step],'-')
     plt.plot(x, u_pred[:,t_step],'--')
+    # plt.xlim(0,1)
+    # plt.ylim(0,1)
     plt.legend(['Reference', 'Prediction'])
     plt.title("$t=0.25$")
     
@@ -73,6 +80,8 @@ def resplot(x, t, t_data, x_data, Exact, u_pred):
     t_step = int(0.5*len(t))
     plt.plot(x, Exact[:,t_step],'-')
     plt.plot(x, u_pred[:,t_step],'--')
+    # plt.xlim(0,1)
+    # plt.ylim(0,1)
     plt.legend(['Reference', 'Prediction'])
     plt.title("$t=0.5$")
     
@@ -82,5 +91,7 @@ def resplot(x, t, t_data, x_data, Exact, u_pred):
     plt.plot(x, u_pred[:,t_step],'--')
     plt.legend(['Reference', 'Prediction'])
     plt.title("$t=0.99$")
+    # plt.xlim(0,1)
+    # plt.ylim(0,1)
     plt.show()
     plt.close()

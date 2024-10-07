@@ -2,7 +2,7 @@ import numpy as np
 def bs_entropy_hj_generator(num_t, num_x, typ='train'):
     N_f = num_t*num_x
     t = np.linspace(0.01, 1, num_t).reshape(-1,1) # T x 1
-    x = np.linspace(0.1, 1, num_x).reshape(-1,1) # N x 1
+    x = np.linspace(0, 1, num_x).reshape(-1,1) # N x 1
     T = t.shape[0]
     N = x.shape[0]
     T_star = np.tile(t, (1, N)).T  # N x T
