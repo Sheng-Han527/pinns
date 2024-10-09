@@ -4,17 +4,21 @@ from scipy.stats import norm
 
 def bs_entropy_hj_generator(num_t, num_x, typ='train'):
     N_f = num_t*num_x
-    t = np.linspace(0.01, 1, num_t).reshape(-1,1) # T x 1
+    t = np.linspace(1e-3, 1, num_t).reshape(-1,1) # T x 1
     
     # Gaussian samples
-    x = np.linspace(0.001, 0.999, num_x)
-    mean = 0.5
-    std_dev = 0.1
-    x=norm.ppf(x, loc=mean, scale=std_dev).reshape(-1,1)
+    # x = np.linspace(1e-3, 1-1e-3, num_x)
+    # mean = 0.5
+    # std_dev = 0.1
+    # x=norm.ppf(x, loc=mean, scale=std_dev).reshape(-1,1)
     # print(x)
 
+    # # Uniform samples + More of 1/2
+    x = np.linspace(1e-3, 1-1e-3, num_x * 9 // 10).reshape(-1,1) # N x 1
+    x = np.concatenate((x, np.full((num_x - (num_x * 9 // 10), 1), 0.5)), axis=0)
+
     # # Uniform samples
-    # x = np.linspace(0, 1, num_x).reshape(-1,1) # N x 1
+    # x = np.linspace(1e-3, 1-1e-3, num_x).reshape(-1,1) # N x 1
     
     # # Extra Weight in middle 
     # num_samples=int(0.2*num_x)
