@@ -1,8 +1,29 @@
 import numpy as np
+from scipy.stats import norm
+
+
 def bs_entropy_hj_generator(num_t, num_x, typ='train'):
     N_f = num_t*num_x
     t = np.linspace(0.01, 1, num_t).reshape(-1,1) # T x 1
-    x = np.linspace(0, 1, num_x).reshape(-1,1) # N x 1
+    
+    # Gaussian samples
+    x = np.linspace(0.001, 0.999, num_x)
+    mean = 0.5
+    std_dev = 0.1
+    x=norm.ppf(x, loc=mean, scale=std_dev).reshape(-1,1)
+    # print(x)
+
+    # # Uniform samples
+    # x = np.linspace(0, 1, num_x).reshape(-1,1) # N x 1
+    
+    # # Extra Weight in middle 
+    # num_samples=int(0.2*num_x)
+    # x1= np.linspace(0, 0.39, num_samples)
+    # x2= np.linspace(0.4, 0.6, num_x-2*num_samples)
+    # x3= np.linspace(0.61, 1, num_samples)
+    # x = np.concatenate((x1, x2, x3), axis=None).reshape(-1,1)
+    
+    
     T = t.shape[0]
     N = x.shape[0]
     T_star = np.tile(t, (1, N)).T  # N x T
@@ -20,7 +41,7 @@ def bs_entropy_hj_generator(num_t, num_x, typ='train'):
     x_data_f = x_data.copy()
     
     if typ == 'train':
-        idx = np.random.choice(np.where((x_data == 0) | (x_data == 1))[0], num_t)
+        idx = np.random.choice(np.where((x_data == x[0]) | (x_data == x[-1]))[0], num_t)
         t_data = t_data[idx]
         x_data = x_data[idx]
         u_data = u_data[idx]
@@ -152,11 +173,11 @@ def ac_generator(num_t, num_x, typ='train'):
         return t_data_f, x_data_f
 
 
-# num_t = 100
-# num_x = 256
-# t_data, x_data, u_data, t_data_f, x_data_f=hj_generator(num_t, num_x)
+num_t = 100
+num_x = 256
+t_data, x_data, u_data, t_data_f, x_data_f=bs_entropy_hj_generator(num_t, num_x)
 # print(t_data)
 # print(len(t_data))
-# print(len(x_data))
+print(len(x_data))
 # print(len(u_data))
-# # print(t_data_f[:200])
+# print(t_data_f[:200])
